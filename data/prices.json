@@ -1,6 +1,14 @@
 {
-  "dates": [],
-  "prime_rate": [],
-  "gasoline": [],
-  "milk": []
+  "dates": [
+    "2026-10-15"
+  ],
+  "prime_rate": [
+    4.45
+  ],
+  "gasoline": [
+    1.65
+  ],
+  "milk": [
+    2.89
+  ]
 }

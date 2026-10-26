@@ -6,41 +6,125 @@
     <title>Cost of Living Tracker</title>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; background: #f4f4f9; }
-        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        #chart { width: 100%; height: 500px; margin-top: 20px; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background: #f4f4f9; 
+            color: #333;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header-card { 
+            background: white; padding: 20px 30px; 
+            border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            margin-bottom: 30px; 
+        }
+        .header-card h2 { margin-top: 0; }
+        .chart-card { 
+            background: white; padding: 20px; 
+            border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            margin-bottom: 30px; 
+        }
+        .chart-title {
+            margin: 0 0 15px 10px; font-size: 1.2rem;
+            color: #444; text-transform: capitalize;
+        }
+        .chart-container { width: 100%; height: 350px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>🇨🇦 Daily Cost of Living Tracker</h2>
-        <p>Automated tracking via GitHub Actions.</p>
-        <div id="chart"></div>
+        <div class="header-card">
+            <h2>🇨🇦 Daily Cost of Living Tracker</h2>
+            <p>Automated tracking via GitHub Actions.</p>
+        </div>
+        <div id="dashboard"></div>
     </div>
 
     <script>
+        function formatTitle(key) {
+            return key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        }
+
         fetch('data/prices.json')
             .then(response => response.json())
             .then(data => {
-                const chart = echarts.init(document.getElementById('chart'));
-                const option = {
-                    tooltip: { trigger: 'axis' },
-                    legend: { data: ['Prime Rate (%)', 'Gasoline ($/L)', 'Milk ($/L)'] },
-                    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-                    xAxis: { type: 'category', data: data.dates, boundaryGap: false },
-                    yAxis: [
-                        { type: 'value', name: 'Price ($)', position: 'left' },
-                        { type: 'value', name: 'Rate (%)', position: 'right' }
-                    ],
-                    series: [
-                        { name: 'Gasoline ($/L)', type: 'line', data: data.gasoline, smooth: true },
-                        { name: 'Milk ($/L)', type: 'line', data: data.milk, smooth: true },
-                        { name: 'Prime Rate (%)', type: 'line', yAxisIndex: 1, data: data.prime_rate, step: 'end', itemStyle: { color: '#d32f2f' } }
-                    ]
-                };
-                chart.setOption(option);
+                const dashboard = document.getElementById('dashboard');
+                const dates = data.dates;
+                const chartInstances = [];
+
+                Object.keys(data).forEach(key => {
+                    if (key === 'dates') return; 
+
+                    const card = document.createElement('div');
+                    card.className = 'chart-card';
+                    
+                    const title = document.createElement('h3');
+                    title.className = 'chart-title';
+                    title.textContent = formatTitle(key);
+                    card.appendChild(title);
+
+                    const chartDiv = document.createElement('div');
+                    chartDiv.className = 'chart-container';
+                    card.appendChild(chartDiv);
+                    
+                    dashboard.appendChild(card);
+
+                    const chart = echarts.init(chartDiv);
+                    chartInstances.push(chart);
+                    
+                    // Style logic based on data type
+                    const isRate = key.includes('rate');
+                    const isIndex = key.includes('index');
+                    const lineColor = isRate ? '#d32f2f' : (isIndex ? '#2e7d32' : '#1976d2');
+
+                    const option = {
+                        tooltip: { trigger: 'axis' },
+                        grid: { left: '2%', right: '3%', bottom: '3%', containLabel: true },
+                        xAxis: {
+                            type: 'category',
+                            data: dates,
+                            boundaryGap: false
+                        },
+                        yAxis: {
+                            type: 'value',
+                            scale: true,
+                            axisLabel: {
+                                formatter: function (value) {
+                                    if (isRate) return value + '%';
+                                    if (isIndex) return value; // Indices have no units
+                                    return '$' + value;
+                                }
+                            }
+                        },
+                        series: [
+                            {
+                                name: formatTitle(key),
+                                type: 'line',
+                                data: data[key],
+                                smooth: !isRate,
+                                step: isRate ? 'end' : false,
+                                itemStyle: { color: lineColor },
+                                areaStyle: {
+                                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                        { offset: 0, color: isRate ? 'rgba(211, 47, 47, 0.2)' : (isIndex ? 'rgba(46, 125, 50, 0.2)' : 'rgba(25, 118, 210, 0.2)') },
+                                        { offset: 1, color: isRate ? 'rgba(211, 47, 47, 0)' : (isIndex ? 'rgba(46, 125, 50, 0)' : 'rgba(25, 118, 210, 0)') }
+                                    ])
+                                }
+                            }
+                        ]
+                    };
+                    chart.setOption(option);
+                });
+
+                window.addEventListener('resize', () => {
+                    chartInstances.forEach(chart => chart.resize());
+                });
             })
-            .catch(error => console.error('Error loading data:', error));
+            .catch(error => {
+                console.error('Error loading data:', error);
+                document.getElementById('dashboard').innerHTML = '<p style="color:red; padding: 20px;">Error loading data. Check the console.</p>';
+            });
     </script>
 </body>
 </html>

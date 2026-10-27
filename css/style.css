@@ -88,6 +88,24 @@ body {
 
 /* Responsive Grid Dashboard */
 #dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.metric-section-heading {
+    margin: 0 0 4px;
+    font-size: 1.4rem;
+    color: var(--text-primary);
+}
+
+.metric-section-description {
+    margin: 0 0 18px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.metric-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
     gap: 24px;
@@ -126,7 +144,7 @@ body {
 
 /* Responsive Breakpoints */
 @media (max-width: 900px) {
-    #dashboard {
+    .metric-grid {
         grid-template-columns: 1fr;
         gap: 18px;
     }
@@ -161,4 +179,3 @@ body {
         height: 290px;
     }
 }
-

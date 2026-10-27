@@ -196,11 +196,45 @@ fetch('data/prices.json')
     .then(data => {
         const dashboard = document.getElementById('dashboard');
         const dates = data.dates;
+        const sections = {
+            expenses: {
+                title: 'Expenses & Cost of Living',
+                description: 'Prices, housing costs, and interest rates that affect everyday expenses.',
+                element: document.createElement('section'),
+                grid: document.createElement('div')
+            },
+            income: {
+                title: 'Income',
+                description: 'Hourly wage measures that provide context for income over time.',
+                element: document.createElement('section'),
+                grid: document.createElement('div')
+            }
+        };
 
         updateToggleUI(currentTheme);
 
+        Object.values(sections).forEach(section => {
+            section.element.className = 'metric-section';
+            const heading = document.createElement('h2');
+            heading.className = 'metric-section-heading';
+            heading.textContent = section.title;
+            section.element.appendChild(heading);
+
+            const description = document.createElement('p');
+            description.className = 'metric-section-description';
+            description.textContent = section.description;
+            section.element.appendChild(description);
+
+            section.grid.className = 'metric-grid';
+            section.element.appendChild(section.grid);
+            dashboard.appendChild(section.element);
+        });
+
         Object.keys(data).forEach(key => {
             if (key === 'dates') return; 
+            const section = key === 'average_hourly_wage' || key === 'median_hourly_wage'
+                ? sections.income
+                : sections.expenses;
 
             const config = METRIC_CONFIG[key] || {
                 title: formatTitle(key),
@@ -229,7 +263,7 @@ fetch('data/prices.json')
             chartDiv.className = 'chart-container';
             card.appendChild(chartDiv);
             
-            dashboard.appendChild(card);
+            section.grid.appendChild(card);
 
             const chart = echarts.init(chartDiv);
             const isDark = currentTheme === 'dark';

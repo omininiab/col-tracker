@@ -4,24 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cost of Living Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="css/main.css" type="text/css" />
     <link rel="stylesheet" href="css/style.css">
+  <!-- Try to keep icon but use standard fallback -->
+  <link rel="icon" href="img/logo-w.svg" sizes="16x16 32x32" type="image/svg" />
+
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
 </head>
 <body>
+    <!-- Navbar -->
+  <nav class="navbar">
+    <a href="https://www.ominini.com" class="logo-container">
+      <!-- Kept the original logo-b.png for now but wrapped in text for brand -->
+      <span class="logo-text">OMININI</span>
+    </a>
+
+  </nav>
+  <!-- Go to Top Button -->
+  <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fa-solid fa-arrow-up"></i></button>
+
     <div class="container">
         <header class="header-card">
             <div class="header-text">
                 <h2>🇨🇦 Cost of Living Tracker</h2>
                 <p>Automated tracking via Statistics Canada and Bank of Canada APIs.</p>
             </div>
-            <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
-                <span class="theme-icon">🌙</span>
-                <span class="theme-text">Dark Mode</span>
+            <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+                <span class="theme-icon" aria-hidden="true"></span>
+                <span class="theme-text"></span>
             </button>
         </header>
         <main id="dashboard"></main>
     </div>
+<!-- Subscribe section -->
+  <section id="subscribe" class="subscribe-section">
+    <h2 class="section-title">Stay Informed on Canadian Policy</h2>
+    <p style="margin-bottom: 30px; font-size: 1.1rem;">Join the movement. Sign up for our newsletter to receive the
+      latest commentary and policy analysis.</p>
 
+    <!-- Begin Mailchimp Signup Form -->
+    <form action="https://ominini.us14.list-manage.com/subscribe/post?u=19131ba207553a340ec75a0e1&amp;id=ebfe9d8533"
+      method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="subscribe-form"
+      target="_blank" novalidate>
+      <input type="email" value="" name="EMAIL" id="exampleInputEmail1" placeholder="Enter your email address"
+        required />
+      <!-- Anti-bot -->
+      <div style="position: absolute; left: -5000px;" aria-hidden="true">
+        <input type="text" name="b_19131ba207553a340ec75a0e1_ebfe9d8533" tabindex="-1" value="" />
+      </div>
+      <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="btn" />
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div id="displayQuote">
+      <p id="randomQuote">"Loading quote..."</p>
+      <span id="quoteAuthor"></span>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="social-links">
+        <!-- links, utilizing FontAwesome -->
+        <a href="https://aemail.com/Wn7E" target="_blank" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+        <a href="https://www.youtube.com/@DontDrinkThisPodcast" aria-label="YouTube"><i
+            class="fa-brands fa-youtube"></i></a>
+      </div>
+      <p id="copyright"></p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/quotes.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

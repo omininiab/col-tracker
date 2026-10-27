@@ -78,13 +78,19 @@ function formatTitle(key) {
 // ==========================================
 // Theme Management (Light / Dark Mode)
 // ==========================================
-function getInitialTheme() {
-    const saved = localStorage.getItem('theme');
-    if (saved) return saved;
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+function getStoredTheme() {
+    try {
+        const saved = localStorage.getItem('theme');
+        return saved === 'light' || saved === 'dark' ? saved : null;
+    } catch (error) {
+        console.warn('Unable to read the saved theme preference:', error);
+        return null;
+    }
 }
 
-let currentTheme = getInitialTheme();
+const prefersDarkTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+let storedTheme = getStoredTheme();
+let currentTheme = storedTheme || (prefersDarkTheme && prefersDarkTheme.matches ? 'dark' : 'light');
 document.documentElement.setAttribute('data-theme', currentTheme);
 
 function updateToggleUI(theme) {
@@ -93,11 +99,15 @@ function updateToggleUI(theme) {
     const icon = toggleBtn.querySelector('.theme-icon');
     const text = toggleBtn.querySelector('.theme-text');
     if (theme === 'dark') {
-        icon.textContent = '☀️';
-        text.textContent = 'Light Mode';
+        icon.textContent = '☀';
+        text.textContent = '';
+        toggleBtn.setAttribute('aria-label', 'Switch to light mode');
+        toggleBtn.setAttribute('aria-pressed', 'true');
     } else {
-        icon.textContent = '🌙';
-        text.textContent = 'Dark Mode';
+        icon.textContent = '☽';
+        text.textContent = '';
+        toggleBtn.setAttribute('aria-label', 'Switch to dark mode');
+        toggleBtn.setAttribute('aria-pressed', 'false');
     }
 }
 
@@ -191,6 +201,42 @@ function buildChartOption(key, config, dates, seriesData, isDark) {
 // ==========================================
 const chartRegistry = [];
 
+function applyTheme(theme, savePreference = true) {
+    currentTheme = theme;
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    updateToggleUI(currentTheme);
+
+    if (savePreference) {
+        storedTheme = currentTheme;
+        try {
+            localStorage.setItem('theme', currentTheme);
+        } catch (error) {
+            console.warn('Unable to save the theme preference:', error);
+        }
+    }
+
+    const isDark = currentTheme === 'dark';
+    chartRegistry.forEach(item => {
+        item.chart.setOption(buildChartOption(item.key, item.config, item.dates, item.seriesData, isDark));
+    });
+}
+
+updateToggleUI(currentTheme);
+const toggleBtn = document.getElementById('theme-toggle');
+if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+        applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    });
+}
+
+if (prefersDarkTheme) {
+    prefersDarkTheme.addEventListener('change', event => {
+        if (!storedTheme) {
+            applyTheme(event.matches ? 'dark' : 'light', false);
+        }
+    });
+}
+
 fetch('data/prices.json')
     .then(response => response.json())
     .then(data => {
@@ -277,22 +323,6 @@ fetch('data/prices.json')
                 seriesData: data[key]
             });
         });
-
-        // Theme Toggle Button Event
-        const toggleBtn = document.getElementById('theme-toggle');
-        if (toggleBtn) {
-            toggleBtn.addEventListener('click', () => {
-                currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                document.documentElement.setAttribute('data-theme', currentTheme);
-                localStorage.setItem('theme', currentTheme);
-                updateToggleUI(currentTheme);
-
-                const isDark = currentTheme === 'dark';
-                chartRegistry.forEach(item => {
-                    item.chart.setOption(buildChartOption(item.key, item.config, item.dates, item.seriesData, isDark));
-                });
-            });
-        }
 
         // Window resize + Dashboard ResizeObserver
         window.addEventListener('resize', () => {

@@ -6,15 +6,17 @@ import os
 DATA_FILE = "data/prices.json"
 
 # ==========================================
-# 🛑 ACTION REQUIRED: UPDATE THESE VECTOR IDs
+# Statistics Canada & Bank of Canada Vector IDs
 # ==========================================
-GASOLINE_VECTOR_ID = 735097      # Ottawa - Use the absolute price ID from Table 18-10-0001-01
-MILK_VECTOR_ID = 1353834285          # Use the absolute price ID from Table 18-10-0245-01
-BREAD_VECTOR_ID = 1353834326         # Use the ID for "White bread, 675g" from Table 18-10-0245-01
-ELECTRICITY_VECTOR_ID = 41691063   # Use the Electricity Index ID from Table 18-10-0004-01
-
-# The Clothing and Footwear Index ID has been pre-filled for you
-CLOTHING_VECTOR_ID = 41691108      #
+GASOLINE_VECTOR_ID = 735097                 # Ottawa - Table 18-10-0001-01
+MILK_VECTOR_ID = 1353834285                 # Canada 4L - Table 18-10-0245-01
+BREAD_VECTOR_ID = 1353834326                # Canada 675g - Table 18-10-0245-01
+ELECTRICITY_VECTOR_ID = 41691063            # Canada Electricity Index - Table 18-10-0004-01
+CLOTHING_VECTOR_ID = 41691108               # Canada Clothing Index - Table 18-10-0004-01
+RENT_VECTOR_ID = 41691052                   # Canada Rent Index - Table 18-10-0004-01
+OWNED_ACCOMMODATION_VECTOR_ID = 41691055   # Canada Owned Accommodation Index - Table 18-10-0004-01
+AVERAGE_WAGE_VECTOR_ID = 2132579           # Canada Average Hourly Wage - Table 14-10-0063-01
+MEDIAN_WAGE_VECTOR_ID = 2132581            # Canada Median Hourly Wage - Table 14-10-0063-01
 
 def fetch_boc_prime_rate():
     url = "https://www.bankofcanada.ca/valet/observations/V80691311/json?recent=1"
@@ -38,7 +40,7 @@ def fetch_statcan_vector(vector_id):
 def main():
     os.makedirs("data", exist_ok=True)
     
-    # Load existing history or initialize with the expanded metrics
+    # Load existing history or initialize with expanded metrics
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, "r") as f:
             history = json.load(f)
@@ -48,9 +50,13 @@ def main():
             "prime_rate": [], 
             "gasoline": [], 
             "milk": [],
-            "electricity_index": [],
-            "clothing_index": [],
-            "bread_per_kg": []
+            "bread_per_kg": [],
+            "rent_index": [],
+            "owned_accommodation_index": [],
+            "average_hourly_wage": [],
+            "median_hourly_wage": [],
+            "electricity_index": [], 
+            "clothing_index": []
         }
     
     today = datetime.now().strftime("%Y-%m-%d")
@@ -63,6 +69,10 @@ def main():
             milk = fetch_statcan_vector(MILK_VECTOR_ID)
             electricity = fetch_statcan_vector(ELECTRICITY_VECTOR_ID)
             clothing = fetch_statcan_vector(CLOTHING_VECTOR_ID)
+            rent = fetch_statcan_vector(RENT_VECTOR_ID)
+            owned = fetch_statcan_vector(OWNED_ACCOMMODATION_VECTOR_ID)
+            avg_wage = fetch_statcan_vector(AVERAGE_WAGE_VECTOR_ID)
+            med_wage = fetch_statcan_vector(MEDIAN_WAGE_VECTOR_ID)
             
             # Fetch bread (675g) and convert to 1kg equivalent
             bread_675g = fetch_statcan_vector(BREAD_VECTOR_ID)
@@ -73,9 +83,13 @@ def main():
             history["prime_rate"].append(prime)
             history["gasoline"].append(gas)
             history["milk"].append(milk)
+            history["bread_per_kg"].append(bread_per_kg)
+            history["rent_index"].append(rent)
+            history["owned_accommodation_index"].append(owned)
+            history["average_hourly_wage"].append(avg_wage)
+            history["median_hourly_wage"].append(med_wage)
             history["electricity_index"].append(electricity)
             history["clothing_index"].append(clothing)
-            history["bread_per_kg"].append(bread_per_kg)
             
             with open(DATA_FILE, "w") as f:
                 json.dump(history, f, indent=2)
@@ -89,4 +103,6 @@ def main():
         print(f"Data for {today} already exists. Skipping.")
 
 if __name__ == "__main__":
+    main()
+
     main()

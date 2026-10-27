@@ -20,6 +20,34 @@ const METRIC_CONFIG = {
         axisFormatter: (val) => '$' + val,
         tooltipFormatter: (val) => '$' + val + ' / kg'
     },
+    rent_index: {
+        title: 'Rent (Index)',
+        unit: 'Index',
+        description: 'Consumer Price Index (CPI) measuring monthly price changes in rental accommodation across Canada (StatCan Table 18-10-0004-01).',
+        axisFormatter: (val) => val,
+        tooltipFormatter: (val) => val + ' (Index)'
+    },
+    owned_accommodation_index: {
+        title: 'Home Ownership (Index)',
+        unit: 'Index',
+        description: 'Consumer Price Index (CPI) tracking owned accommodation costs including mortgage interest, replacement cost, and property taxes (StatCan Table 18-10-0004-01).',
+        axisFormatter: (val) => val,
+        tooltipFormatter: (val) => val + ' (Index)'
+    },
+    average_hourly_wage: {
+        title: 'Average Wage ($/hr)',
+        unit: '$/hr',
+        description: 'Canada-wide average hourly wage rate across all industries and employees (Labour Force Survey, StatCan Table 14-10-0063-01).',
+        axisFormatter: (val) => '$' + val,
+        tooltipFormatter: (val) => '$' + val + ' / hr'
+    },
+    median_hourly_wage: {
+        title: 'Median Wage ($/hr)',
+        unit: '$/hr',
+        description: 'Canada-wide median hourly wage rate across all industries and employees (Labour Force Survey, StatCan Table 14-10-0063-01).',
+        axisFormatter: (val) => '$' + val,
+        tooltipFormatter: (val) => '$' + val + ' / hr'
+    },
     prime_rate: {
         title: 'Prime Rate (%)',
         unit: '%',
@@ -88,7 +116,21 @@ function buildChartOption(key, config, dates, seriesData, isDark) {
     const colors = getThemeColors(isDark);
     const isRate = key.includes('rate');
     const isIndex = key.includes('index');
-    const lineColor = isRate ? '#e53935' : (isIndex ? '#43a047' : '#1e88e5');
+    const isWage = key.includes('wage');
+    
+    // Theme line colors: red for rates, green for indices, purple for wages, blue for commodity prices
+    let lineColor = '#1e88e5';
+    let gradientRgb = '30, 136, 229';
+    if (isRate) {
+        lineColor = '#e53935';
+        gradientRgb = '229, 57, 53';
+    } else if (isIndex) {
+        lineColor = '#43a047';
+        gradientRgb = '67, 160, 71';
+    } else if (isWage) {
+        lineColor = '#8e24aa';
+        gradientRgb = '142, 36, 170';
+    }
 
     return {
         tooltip: { 
@@ -135,8 +177,8 @@ function buildChartOption(key, config, dates, seriesData, isDark) {
                 itemStyle: { color: lineColor },
                 areaStyle: {
                     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 0, color: isRate ? 'rgba(229, 57, 53, 0.2)' : (isIndex ? 'rgba(67, 160, 71, 0.2)' : 'rgba(30, 136, 229, 0.2)') },
-                        { offset: 1, color: isRate ? 'rgba(229, 57, 53, 0)' : (isIndex ? 'rgba(67, 160, 71, 0)' : 'rgba(30, 136, 229, 0)') }
+                        { offset: 0, color: `rgba(${gradientRgb}, 0.2)` },
+                        { offset: 1, color: `rgba(${gradientRgb}, 0)` }
                     ])
                 }
             }

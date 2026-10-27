@@ -8,9 +8,9 @@ DATA_FILE = "data/prices.json"
 # ==========================================
 # 🛑 ACTION REQUIRED: UPDATE THESE VECTOR IDs
 # ==========================================
-GASOLINE_VECTOR_ID = 735097      # Ottawa - Use the absolute price ID from Table 18-10-0245-01
+GASOLINE_VECTOR_ID = 735097      # Ottawa - Use the absolute price ID from Table 18-10-0001-01
 MILK_VECTOR_ID = 1353834285          # Use the absolute price ID from Table 18-10-0245-01
-BREAD_VECTOR_ID = 735175         # Use the ID for "White bread, 675g" from Table 18-10-0245-01
+BREAD_VECTOR_ID = 1353834326         # Use the ID for "White bread, 675g" from Table 18-10-0245-01
 ELECTRICITY_VECTOR_ID = 41691063   # Use the Electricity Index ID from Table 18-10-0004-01
 
 # The Clothing and Footwear Index ID has been pre-filled for you

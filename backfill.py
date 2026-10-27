@@ -9,7 +9,7 @@ DATA_FILE = "data/prices.json"
 # ==========================================
 GASOLINE_VECTOR_ID = 735097      
 MILK_VECTOR_ID = 1353834285          
-BREAD_VECTOR_ID = 735175         
+BREAD_VECTOR_ID = 1353834326         
 ELECTRICITY_VECTOR_ID = 41691063   
 CLOTHING_VECTOR_ID = 41691108      #
 

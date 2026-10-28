@@ -8,7 +8,7 @@ An automated, serverless architecture that tracks the Canadian cost of living ov
 - **Automation**: `.github/workflows/scraper.yml` runs the crawler monthly, commits changed data, and deploys the site.
 - **Frontend**: `index.html` visualizes data using ECharts via GitHub Pages.
 
-The shared Ominini navbar, typography, buttons, newsletter/footer styling, quote, and scroll-to-top behavior are served from `https://www.ominini.com/assets/`. The source of truth is the `omininiab.github.io` repository; the tracker intentionally retains only dashboard-specific styles in `css/style.css`. Deploy the homepage repository before this tracker so those shared asset URLs are available.
+The shared Ominini navbar, typography, buttons, light/dark theme toggle, newsletter/footer styling, quote, and scroll-to-top behavior are served from `https://www.ominini.com/assets/`. The source of truth is the `omininiab.github.io` repository; the tracker intentionally retains only dashboard-specific styles and chart theme updates locally. Theme preferences are saved per site origin by the browser. Deploy the homepage repository before this tracker so those shared asset URLs are available.
 
 ## GitHub Actions setup
 

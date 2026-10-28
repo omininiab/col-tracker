@@ -75,42 +75,6 @@ function formatTitle(key) {
     return key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
-// ==========================================
-// Theme Management (Light / Dark Mode)
-// ==========================================
-function getStoredTheme() {
-    try {
-        const saved = localStorage.getItem('theme');
-        return saved === 'light' || saved === 'dark' ? saved : null;
-    } catch (error) {
-        console.warn('Unable to read the saved theme preference:', error);
-        return null;
-    }
-}
-
-const prefersDarkTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
-let storedTheme = getStoredTheme();
-let currentTheme = storedTheme || (prefersDarkTheme && prefersDarkTheme.matches ? 'dark' : 'light');
-document.documentElement.setAttribute('data-theme', currentTheme);
-
-function updateToggleUI(theme) {
-    const toggleBtn = document.getElementById('theme-toggle');
-    if (!toggleBtn) return;
-    const icon = toggleBtn.querySelector('.theme-icon');
-    const text = toggleBtn.querySelector('.theme-text');
-    if (theme === 'dark') {
-        icon.textContent = '☀';
-        text.textContent = '';
-        toggleBtn.setAttribute('aria-label', 'Switch to light mode');
-        toggleBtn.setAttribute('aria-pressed', 'true');
-    } else {
-        icon.textContent = '☽';
-        text.textContent = '';
-        toggleBtn.setAttribute('aria-label', 'Switch to dark mode');
-        toggleBtn.setAttribute('aria-pressed', 'false');
-    }
-}
-
 function getThemeColors(isDark) {
     return {
         axisLine: isDark ? '#30363d' : '#d0d7de',
@@ -200,42 +164,15 @@ function buildChartOption(key, config, dates, seriesData, isDark) {
 // Dashboard Initialization
 // ==========================================
 const chartRegistry = [];
+let currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
 
-function applyTheme(theme, savePreference = true) {
-    currentTheme = theme;
-    document.documentElement.setAttribute('data-theme', currentTheme);
-    updateToggleUI(currentTheme);
-
-    if (savePreference) {
-        storedTheme = currentTheme;
-        try {
-            localStorage.setItem('theme', currentTheme);
-        } catch (error) {
-            console.warn('Unable to save the theme preference:', error);
-        }
-    }
-
+document.addEventListener('themechange', event => {
+    currentTheme = event.detail.theme;
     const isDark = currentTheme === 'dark';
     chartRegistry.forEach(item => {
         item.chart.setOption(buildChartOption(item.key, item.config, item.dates, item.seriesData, isDark));
     });
-}
-
-updateToggleUI(currentTheme);
-const toggleBtn = document.getElementById('theme-toggle');
-if (toggleBtn) {
-    toggleBtn.addEventListener('click', () => {
-        applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
-    });
-}
-
-if (prefersDarkTheme) {
-    prefersDarkTheme.addEventListener('change', event => {
-        if (!storedTheme) {
-            applyTheme(event.matches ? 'dark' : 'light', false);
-        }
-    });
-}
+});
 
 fetch('data/prices.json')
     .then(response => response.json())
@@ -256,8 +193,6 @@ fetch('data/prices.json')
                 grid: document.createElement('div')
             }
         };
-
-        updateToggleUI(currentTheme);
 
         Object.values(sections).forEach(section => {
             section.element.className = 'metric-section';

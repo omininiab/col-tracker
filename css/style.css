@@ -1,39 +1,5 @@
-:root {
-    --bg-page: #f4f4f9;
-    --bg-card: #ffffff;
-    --text-primary: #1f2328;
-    --text-secondary: #656d76;
-    --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    --border-color: rgba(0, 0, 0, 0.08);
-    --toggle-bg: #eaecef;
-    --toggle-text: #24292f;
-    --toggle-hover: #d0d7de;
-    color-scheme: light;
-}
-
-[data-theme="dark"] {
-    --bg-page: #0d1117;
-    --bg-card: #161b22;
-    --text-primary: #e6edf3;
-    --text-secondary: #8b949e;
-    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-    --border-color: #30363d;
-    --toggle-bg: #21262d;
-    --toggle-text: #c9d1d9;
-    --toggle-hover: #30363d;
-    --col-primary: #0d1117;
-    --dk-bgd-col: #0d1117;
-    --text-light: #c9d1d9;
-    color-scheme: dark;
-}
-
 body { 
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-    margin: 0; 
-    padding: 0;
-    background: var(--bg-page); 
-    color: var(--text-primary);
-    transition: background-color 0.25s ease, color 0.25s ease;
+    background: var(--bg-page);
 }
 
 .container { 
@@ -68,78 +34,6 @@ body {
     margin: 0;
     font-size: 0.92rem;
     color: var(--text-secondary);
-}
-
-.theme-toggle-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: var(--toggle-bg);
-    color: var(--toggle-text);
-    border: 1px solid var(--border-color);
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 0.88rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    user-select: none;
-}
-
-.theme-toggle-btn:hover {
-    background: var(--toggle-hover);
-    transform: translateY(-1px);
-}
-
-.theme-toggle-btn:focus-visible {
-    outline: 3px solid #1e88e5;
-    outline-offset: 3px;
-}
-
-.navbar,
-.subscribe-section,
-footer {
-    transition: background-color 0.25s ease, color 0.25s ease;
-}
-
-[data-theme="dark"] .navbar {
-    background-color: var(--bg-card);
-}
-
-[data-theme="dark"] .logo-text {
-    color: var(--text-primary);
-}
-
-[data-theme="dark"] .subscribe-section {
-    background-color: var(--bg-card);
-    color: var(--text-primary);
-}
-
-[data-theme="dark"] .subscribe-section h2,
-[data-theme="dark"] .subscribe-section p {
-    color: var(--text-primary);
-}
-
-[data-theme="dark"] .subscribe-section .section-title::after {
-    background-color: var(--text-primary);
-}
-
-[data-theme="dark"] footer {
-    background-color: #010409;
-    color: var(--text-secondary);
-}
-
-[data-theme="dark"] #displayQuote {
-    color: var(--text-primary);
-}
-
-[data-theme="dark"] .social-links a {
-    color: var(--text-primary);
-}
-
-[data-theme="dark"] #myBtn {
-    background-color: var(--toggle-bg);
-    color: var(--text-primary);
 }
 
 /* Responsive Grid Dashboard */

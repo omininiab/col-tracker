@@ -19,7 +19,10 @@
       <!-- Kept the original logo-b.png for now but wrapped in text for brand -->
       <span class="logo-text">OMININI</span>
     </a>
-
+    <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Dark mode" aria-pressed="false">
+      <span class="theme-icon" aria-hidden="true">☽</span>
+      <span class="theme-text">Dark mode</span>
+    </button>
   </nav>
   <!-- Go to Top Button -->
   <button id="myBtn" title="Go to top" aria-label="Go to top"><i class="fa-solid fa-arrow-up"></i></button>
@@ -30,10 +33,6 @@
                 <h2>🇨🇦 Cost of Living Tracker</h2>
                 <p>Automated tracking via Statistics Canada and Bank of Canada APIs.</p>
             </div>
-            <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Switch to dark mode" aria-pressed="false">
-                <span class="theme-icon" aria-hidden="true"></span>
-                <span class="theme-text"></span>
-            </button>
         </header>
         <main id="dashboard"></main>
     </div>
@@ -47,10 +46,11 @@
     <form action="https://ominini.us14.list-manage.com/subscribe/post?u=19131ba207553a340ec75a0e1&amp;id=ebfe9d8533"
       method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="subscribe-form"
       target="_blank" novalidate>
+      <label class="visually-hidden" for="exampleInputEmail1">Email address</label>
       <input type="email" value="" name="EMAIL" id="exampleInputEmail1" placeholder="Enter your email address"
         required />
       <!-- Anti-bot -->
-      <div style="position: absolute; left: -5000px;" aria-hidden="true">
+      <div class="visually-hidden" aria-hidden="true">
         <input type="text" name="b_19131ba207553a340ec75a0e1_ebfe9d8533" tabindex="-1" value="" />
       </div>
       <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="btn" />

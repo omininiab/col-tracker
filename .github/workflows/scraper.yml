@@ -70,10 +70,7 @@ jobs:
           mkdir -p _site/css _site/js _site/img _site/data
           cp index.html _site/index.html
           cp css/style.css _site/css/style.css
-          cp css/main.css _site/css/main.css
           cp js/app.js _site/js/app.js
-          cp js/main.js _site/js/main.js
-          cp js/quotes.js _site/js/quotes.js
           cp -R img/. _site/img/
           cp data/prices.json _site/data/prices.json
 

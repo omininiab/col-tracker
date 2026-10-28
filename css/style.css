@@ -8,13 +8,6 @@
     --toggle-bg: #eaecef;
     --toggle-text: #24292f;
     --toggle-hover: #d0d7de;
-    --col-primary: #0f204b;
-    --col-accent: #d80621;
-    --col-accent-hover: #b0051a;
-    --dk-bgd-col: #0b1736;
-    --lt-bgd-col: #f4f4f9;
-    --col-white: #ffffff;
-    --text-light: #e0e0e0;
     color-scheme: light;
 }
 
@@ -29,10 +22,7 @@
     --toggle-text: #c9d1d9;
     --toggle-hover: #30363d;
     --col-primary: #0d1117;
-    --col-accent: #d80621;
-    --col-accent-hover: #b0051a;
     --dk-bgd-col: #0d1117;
-    --lt-bgd-col: #0d1117;
     --text-light: #c9d1d9;
     color-scheme: dark;
 }
